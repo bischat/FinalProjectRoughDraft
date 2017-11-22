@@ -25,12 +25,11 @@
         android:id="@+id/professorButton"
         android:layout_width="348dp"
         android:layout_height="58dp"
-        android:layout_marginBottom="209dp"
-        android:layout_marginLeft="6dp"
+        android:layout_marginBottom="104dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:text="Professor"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.541"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 </android.support.constraint.ConstraintLayout>
