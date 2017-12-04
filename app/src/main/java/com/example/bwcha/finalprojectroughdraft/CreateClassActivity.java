@@ -21,6 +21,7 @@ public class CreateClassActivity extends AppCompatActivity {
     Button createClassButton;
     EditText createClassText;
     public static DatabaseReference classRef;
+    public static DatabaseReference messages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +45,10 @@ public class CreateClassActivity extends AppCompatActivity {
                             classRef = firebaseDatabase.getReference
                                     ("class" + createClassText.getText().toString());
                             classRef.setValue(createClassText.getText().toString());
-
+                            messages = classRef.child("messages");
+                            messages.setValue("questions");
+                            DatabaseReference questionHint = messages.push();
+                            questionHint.setValue("Questions will appear here");
                             Intent intent = new Intent(v.getContext(), ProfessorActivity.class);
                             startActivity(intent);
                             finish();

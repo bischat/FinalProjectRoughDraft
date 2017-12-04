@@ -2,16 +2,24 @@ package com.example.bwcha.finalprojectroughdraft;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.example.bwcha.finalprojectroughdraft.CreateClassActivity.classRef;
+import static com.example.bwcha.finalprojectroughdraft.CreateClassActivity.messages;
 
 public class ProfessorActivity extends AppCompatActivity {
+
+    List<String> messageList = new ArrayList<>();
 
 
     @Override
@@ -19,6 +27,8 @@ public class ProfessorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_professor);
 
+        final Button viewQuestionButton = (Button)findViewById(R.id.viewQuestionButton);
+        final TextView questionTextView = (TextView)findViewById(R.id.questionTextView);
         final TextView greenCountView = (TextView)findViewById(R.id.greenCountView);
         final TextView yellowCountView = (TextView)findViewById(R.id.yellowCountView);
         final TextView redCountView = (TextView)findViewById(R.id.redCountView);
@@ -36,8 +46,11 @@ public class ProfessorActivity extends AppCompatActivity {
                     else if(dataSnap.getValue().equals(Long.valueOf(1))) {
                         yellows++;
                     }
-                    else {
+                    else if(dataSnap.getValue().equals(Long.valueOf(0))) {
                         reds++;
+                    }
+                    else {
+
                     }
                 }
                 greenCountView.setText(greens+"");
@@ -52,13 +65,36 @@ public class ProfessorActivity extends AppCompatActivity {
             }
         });
 
-    }
+        messages.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<DataSnapshot> snapShotList = new ArrayList<>();
+                for (DataSnapshot dataSnap: dataSnapshot.getChildren()) {
+                    snapShotList.add(dataSnap);
+                }
+                String question = snapShotList.get(snapShotList.size()-1).getValue().toString();
+                messageList.add(question);
+            }
 
-    @Override
-    protected void onDestroy() {
-        classRef.removeValue();
-        super.onDestroy();
-        finish();
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        viewQuestionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (messageList.size() != 0) {
+                    questionTextView.setText(messageList.get(0).toString());
+                    messageList.remove(0);
+                } else {
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "There are no questions",Toast.LENGTH_LONG);
+                    toast.show();
+                }
+            }
+        });
     }
 
     @Override
@@ -68,6 +104,11 @@ public class ProfessorActivity extends AppCompatActivity {
         finish();
     }
 
-
+    @Override
+    public void onDestroy() {
+        classRef.removeValue();
+        super.onDestroy();
+        finish();
+    }
 
 }

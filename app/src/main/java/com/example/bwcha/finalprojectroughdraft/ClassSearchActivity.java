@@ -13,8 +13,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Random;
-
 import static com.example.bwcha.finalprojectroughdraft.MainActivity.firebaseDatabase;
 import static com.example.bwcha.finalprojectroughdraft.MainActivity.root;
 
@@ -44,6 +42,7 @@ public class ClassSearchActivity extends AppCompatActivity {
                             classSearched = firebaseDatabase.getReference("class" + searchClassText.getText().toString());
                             classRefName = "class" + searchClassText.getText().toString();
                             student = classSearched.push();
+                            studentName = student.getKey();
                             student.setValue(2);
                             Intent intent = new Intent(v.getContext(), StudentActivity.class);
                             startActivity(intent);
@@ -65,18 +64,5 @@ public class ClassSearchActivity extends AppCompatActivity {
 
 
     }
-
-    public String generateRandom5CharString() {
-        String alphabet = "abcdefghijklmnopqrstuvwxyz";
-        Random rand = new Random();
-        String randomString = "";
-        for (int i = 0; i < 5; i++) {
-            randomString += alphabet.charAt(rand.nextInt(alphabet.length()));
-        }
-        return randomString;
-    }
-
-
-
 
 }

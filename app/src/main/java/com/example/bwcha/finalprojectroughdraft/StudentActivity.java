@@ -1,18 +1,21 @@
 package com.example.bwcha.finalprojectroughdraft;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ToggleButton;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import static com.example.bwcha.finalprojectroughdraft.ClassSearchActivity.classRefName;
+import static com.example.bwcha.finalprojectroughdraft.ClassSearchActivity.classSearched;
 import static com.example.bwcha.finalprojectroughdraft.ClassSearchActivity.student;
+import static com.example.bwcha.finalprojectroughdraft.ClassSearchActivity.studentName;
 import static com.example.bwcha.finalprojectroughdraft.MainActivity.root;
 
 public class StudentActivity extends AppCompatActivity {
@@ -20,6 +23,9 @@ public class StudentActivity extends AppCompatActivity {
     ToggleButton greenButton;
     ToggleButton yellowButton;
     ToggleButton redButton;
+    Button sendQuestionButton;
+    EditText sendQuestionText;
+    DatabaseReference classMessages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +70,7 @@ public class StudentActivity extends AppCompatActivity {
                         }
                     });
                 } else {
-
+                    finish();
                 }
             }
 
@@ -74,19 +80,32 @@ public class StudentActivity extends AppCompatActivity {
             }
         });
 
-
+        sendQuestionText = (EditText)findViewById(R.id.questionTextBox);
+        sendQuestionButton = (Button)findViewById(R.id.sendQuestionButton);
+        sendQuestionButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                String question = sendQuestionText.getText().toString();
+                classMessages = classSearched.child("messages");
+                DatabaseReference questionRef = classMessages.push();
+                questionRef.setValue(question);
+                sendQuestionText.setText("");
+            }
+        });
     }
+
+    @Override
+    protected void onStop() {
+        classSearched.child(studentName).setValue(null);
+        super.onStop();
+        finish();
+    }
+
     @Override
     protected void onDestroy() {
-        student.removeValue();
+        classSearched.child(studentName).setValue(null);
         super.onDestroy();
         finish();
     }
 
-    @Override
-    public void onStop() {
-        student.removeValue();
-        super.onStop();
-        finish();
-    }
 }
