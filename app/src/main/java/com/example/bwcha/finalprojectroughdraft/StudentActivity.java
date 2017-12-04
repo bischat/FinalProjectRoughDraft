@@ -15,7 +15,6 @@ import com.google.firebase.database.ValueEventListener;
 import static com.example.bwcha.finalprojectroughdraft.ClassSearchActivity.classRefName;
 import static com.example.bwcha.finalprojectroughdraft.ClassSearchActivity.classSearched;
 import static com.example.bwcha.finalprojectroughdraft.ClassSearchActivity.student;
-import static com.example.bwcha.finalprojectroughdraft.ClassSearchActivity.studentName;
 import static com.example.bwcha.finalprojectroughdraft.MainActivity.root;
 
 public class StudentActivity extends AppCompatActivity {
@@ -96,14 +95,14 @@ public class StudentActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        classSearched.child(studentName).setValue(null);
+        student.removeValue();
         super.onStop();
         finish();
     }
 
     @Override
     protected void onDestroy() {
-        classSearched.child(studentName).setValue(null);
+        student.removeValue();
         super.onDestroy();
         finish();
     }

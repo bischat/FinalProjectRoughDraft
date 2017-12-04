@@ -20,8 +20,8 @@ public class ClassSearchActivity extends AppCompatActivity {
 
     Button searchClassButton;
     EditText searchClassText;
-    public static String studentName;
-    public static String classRefName;
+
+    public static String classRefName = "";
     public static DatabaseReference classSearched;
     public static DatabaseReference student;
 
@@ -38,12 +38,14 @@ public class ClassSearchActivity extends AppCompatActivity {
                 root.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.hasChild("class" + searchClassText.getText().toString())) {
-                            classSearched = firebaseDatabase.getReference("class" + searchClassText.getText().toString());
-                            classRefName = "class" + searchClassText.getText().toString();
+                        String classNameSearched = "class-" + searchClassText.getText().toString();
+
+                        if (dataSnapshot.hasChild(classNameSearched)) {
+                            classRefName = classNameSearched;
+                            classSearched = firebaseDatabase.getReference(classNameSearched);
                             student = classSearched.push();
-                            studentName = student.getKey();
                             student.setValue(2);
+
                             Intent intent = new Intent(v.getContext(), StudentActivity.class);
                             startActivity(intent);
                             finish();

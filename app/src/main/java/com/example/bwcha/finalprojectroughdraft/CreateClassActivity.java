@@ -20,6 +20,7 @@ public class CreateClassActivity extends AppCompatActivity {
 
     Button createClassButton;
     EditText createClassText;
+
     public static DatabaseReference classRef;
     public static DatabaseReference messages;
 
@@ -27,6 +28,7 @@ public class CreateClassActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_class);
+
         createClassText = (EditText)findViewById(R.id.createClassText);
         createClassButton = (Button)findViewById(R.id.createClassButton);
 
@@ -36,19 +38,20 @@ public class CreateClassActivity extends AppCompatActivity {
                 root.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.hasChild("class" + createClassText.getText().toString())) {
+                        String className = "class-" + createClassText.getText().toString();
+
+                        if (dataSnapshot.hasChild(className)) {
                             Toast toast = Toast.makeText(getApplicationContext(),
                                     "Class Id already exists. Try again.",Toast.LENGTH_LONG);
                             toast.show();
 
                         }else {
-                            classRef = firebaseDatabase.getReference
-                                    ("class" + createClassText.getText().toString());
+                            classRef = firebaseDatabase.getReference(className);
                             classRef.setValue(createClassText.getText().toString());
                             messages = classRef.child("messages");
-                            messages.setValue("questions");
                             DatabaseReference questionHint = messages.push();
                             questionHint.setValue("Questions will appear here");
+
                             Intent intent = new Intent(v.getContext(), ProfessorActivity.class);
                             startActivity(intent);
                             finish();
